@@ -1,3 +1,25 @@
+### Estrutura dos diretórios
+```
+app/
+├── dist/                # Pasta de saída dos arquivos gerados na build
+├── node_modules/        # Dependências instaladas via npm
+├── src/                 # Código-fonte da aplicação
+│   ├── App.tsx          # Componente principal da aplicação
+│   ├── index.css        # Arquivo de estilos global
+│   ├── main.tsx         # Ponto de entrada da aplicação React
+│   └── vite-env.d.ts    # Declarações de tipos específicas do Vite
+├── .gitignore           # Arquivo para ignorar arquivos/pastas no Git
+├── eslint.config.js     # Configuração do ESLint
+├── index.html           # Arquivo HTML principal
+├── package-lock.json    # Arquivo de lock do npm
+├── package.json         # Gerenciador de scripts e dependências do projeto
+├── postcss.config       # Configuração do PostCSS (possivelmente sem extensão, mas indica a configuração)
+├── tailwind.config.js   # Configuração do Tailwind CSS
+├── tsconfig.app.json    # Configuração TypeScript específica para o app
+├── tsconfig.json        # Configuração geral do TypeScript
+├── tsconfig.node.json   # Configuração TypeScript para scripts/node
+└── vite.config.ts       # Configuração do Vite
+```
 ### **Modelo de Banco de Dados MongoDB**
 
 A seguir está a modelagem para a **coleção `posts`**, que armazena os posts gerados.
