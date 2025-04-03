@@ -69,7 +69,7 @@ Limite cada seção a 2-3 linhas no máximo.
 
     // Conecta ao MongoDB
     const dbUrl = import.meta.env.VITE_MONGOCONSTRING;
-    const collectionName = import.meta.env.MONGOCOLLECTION;
+    const collectionName = import.meta.env.VITE_MONGOCOLLECTION;
     if (!dbUrl || !collectionName) {
       throw new Error("Detalhes de conexão do MongoDB não definidos.");
     }
