@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Copy, Send, RefreshCw, MessageSquare } from 'lucide-react';
+import { fetchGeneratedPost } from './api';
 
-type SocialChannel = 'Instagram' | 'Facebook' | 'TikTok' | 'Site';
+export type SocialChannel = 'Instagram' | 'Facebook' | 'TikTok' | 'Site';
 
-interface FormData {
+export interface FormData {
   segment: string;
   product: string;
   target: string;
@@ -12,7 +13,7 @@ interface FormData {
   channel: SocialChannel;
 }
 
-interface GeneratedPost {
+export interface GeneratedPost {
   hook: string;
   problem: string;
   solution: string;
@@ -38,19 +39,16 @@ function App() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const generatePost = (data: FormData): GeneratedPost => {
-    return {
-      hook: `💪 ${data.product} perfeito para ${data.target}!`,
-      problem: `Você já enfrentou ${data.problem}? Sabemos como isso pode ser frustrante...`,
-      solution: `Com ${data.product}, você terá ${data.solution}. Nossa solução foi desenvolvida pensando especialmente em você!`,
-      cta: `🎯 Não perca mais tempo! Entre em contato agora e descubra como podemos te ajudar.`,
-    };
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const post = generatePost(formData);
-    setGeneratedPost(post);
+    try {
+      // Chama a API para gerar o post utilizando os dados do formulário
+      const post = await fetchGeneratedPost(formData);
+      setGeneratedPost(post);
+    } catch (error) {
+      console.error("Erro na geração do post:", error);
+      // Aqui você pode implementar feedback visual para o usuário
+    }
   };
 
   const handleCopy = async () => {
