@@ -5,10 +5,11 @@ app/
 ├── node_modules/        # Dependências instaladas via npm
 ├── src/                 # Código-fonte da aplicação
 │   ├── App.tsx          # Componente principal da aplicação
+|   ├── api.ts           # Configuração para utilizar api do modelo de linguagem
 │   ├── index.css        # Arquivo de estilos global
 │   ├── main.tsx         # Ponto de entrada da aplicação React
 │   └── vite-env.d.ts    # Declarações de tipos específicas do Vite
-├── .env                 # Modelo para as variáveis de ambiente
+├── .env                 # Variáveis de ambiente
 ├── .gitignore           # Arquivo para ignorar arquivos/pastas no Git
 ├── eslint.config.js     # Configuração do ESLint
 ├── index.html           # Arquivo HTML principal
