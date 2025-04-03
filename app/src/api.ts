@@ -22,10 +22,10 @@ Problema: ${data.problem}
 Solução: ${data.solution}
 
 O post deve seguir este formato:
-1. Hook: Uma frase curta e impactante para chamar atenção (use emojis)
-2. Problema: Explicação clara do problema do cliente
-3. Solução: Como o produto resolve o problema
-4. Call to Action (CTA): Chamada para ação incentivando o engajamento
+**1. Hook:** Uma frase curta e impactante para chamar atenção (use emojis)
+**2. Problema:** Explicação clara do problema do cliente
+**3. Solução:** Como o produto resolve o problema
+**4. (CTA):** Chamada para ação incentivando o engajamento
 
 Mantenha o texto envolvente, persuasivo e adequado para redes sociais.
 Use emojis apropriados para tornar o texto mais atraente.
@@ -58,11 +58,12 @@ Limite cada seção a 2-3 linhas no máximo.
 
     // Divide a resposta em seções
     const sections = textResponse.split('\n\n');
+    console.log(sections);
     const generatedPost: GeneratedPost = {
-      hook: sections[0]?.replace("1. Hook: ", "").trim() || "",
-      problem: sections[1]?.replace("2. Problema: ", "").trim() || "",
-      solution: sections[2]?.replace("3. Solução: ", "").trim() || "",
-      cta: sections[3]?.replace("4. Call to Action (CTA): ", "").trim() || "",
+      hook: sections[0]?.replace("**1. Hook:**", "").trim() || "",
+      problem: sections[1]?.replace("**2. Problema:**", "").trim() || "",
+      solution: sections[2]?.replace("**3. Solução:**", "").trim() || "",
+      cta: sections[3]?.replace("**4. (CTA):**", "").trim() || "",
     };
 
     return generatedPost;
