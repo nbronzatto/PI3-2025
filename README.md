@@ -21,6 +21,46 @@ app/
 ├── tsconfig.node.json   # Configuração TypeScript para scripts/node
 └── vite.config.ts       # Configuração do Vite
 ```
+### Fluxo do APP
+```mermaid
+flowchart TD
+    %% Subgraph de entrada (horizontal)
+    subgraph Entrada [Formulário e Entrada de Dados]
+      direction LR
+      A[Usuário preenche formulário] --> B[App recebe inputs]
+    end
+
+    %% Subgraph de integração com Gemini (horizontal)
+    subgraph Gemini [Integração com Gemini-2.5-Flash]
+      direction LR
+      C[Envia inputs para API do Gemini] --> D[Gemini-2.5-Flash gera textos]
+    end
+
+    %% Subgraph de processamento (horizontal)
+    subgraph Processamento [Processamento e Armazenamento]
+      direction LR
+      E[App recebe textos gerados] --> F[Segmenta o texto]
+      F --> G[Salva conteúdos no MongoDB]
+    end
+
+    %% Conexões entre subgraphs
+    B --> C
+    D --> E
+
+    %% Estilização de nós
+    style A fill:#cce5ff,stroke:#004085,stroke-width:2px;
+    style B fill:#d4edda,stroke:#155724,stroke-width:2px;
+    style C fill:#fff3cd,stroke:#856404,stroke-width:2px;
+    style D fill:#ffeeba,stroke:#856404,stroke-width:2px;
+    style E fill:#d1ecf1,stroke:#0c5460,stroke-width:2px;
+    style F fill:#f8d7da,stroke:#721c24,stroke-width:2px;
+    style G fill:#f5c6cb,stroke:#721c24,stroke-width:2px;
+
+    %% Nota informativa sobre o Gemini-2.5-Flash
+    D -->|Modelo de IA para geração de textos| NoteGemini
+    NoteGemini["**Gemini-2.5-Flash** <br> Gera textos otimizados com prompt <br> para postagens e conteúdos de marketing."]
+
+```
 ### **Modelo de Banco de Dados MongoDB**
 
 A seguir está a modelagem para a **coleção `posts`**, que armazena os posts gerados.
