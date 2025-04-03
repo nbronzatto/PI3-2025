@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Copy, Send, RefreshCw, MessageSquare } from 'lucide-react';
-import { fetchGeneratedPost } from './api';
+
 
 export type SocialChannel = 'Instagram' | 'Facebook' | 'TikTok' | 'Site';
 

@@ -91,3 +91,8 @@ A seguir está a modelagem para a **coleção `posts`**, que armazena os posts g
   "criado_em": ISODate("2025-03-20T10:30:00Z")
 }
 ```
+# Nova Estrutura
+
+## Backend Steps
+## Front
+
