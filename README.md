@@ -62,6 +62,16 @@ flowchart TD
     NoteGemini["**Gemini-2.5-Flash** <br> Gera textos otimizados com prompt <br> para postagens e conteúdos de marketing."]
 
 ```
+### Dependências
+| Pacote         | Versão    | Descrição                                  |
+|---------------|----------|--------------------------------------------|
+| axios        | ^1.8.4   | Cliente HTTP para fazer requisições        |
+| dotenv       | ^16.4.7  | Carregar variáveis de ambiente do `.env`   |
+| lucide-react | ^0.344.0 | Ícones para React                          |
+| mongodb      | ^6.15.0  | Driver oficial do MongoDB para Node.js     |
+| react        | ^18.3.1  | Biblioteca para construção de interfaces   |
+| react-dom    | ^18.3.1  | Manipulação da árvore DOM com React       |
+
 ### **Modelo de Banco de Dados MongoDB**
 
 A seguir está a modelagem para a **coleção `posts`**, que armazena os posts gerados.
