@@ -1,40 +1,47 @@
-### Estrutura dos diretórios
+# Gerador de Conteúdos para Posts
+## Iniciando o aplicativo em ambiente de desenvolvimento
+
+### 1. Instalar dependências do backend
+```bash
+cd backend
+npm install
+cd ..
+```
+
+### 2. Instalar dependências do frontend
+```bash
+cd interface
+npm install
+cd ..
+```
+
+### 3. Iniciar ambos os serviços (frontend e backend juntos)
+```bash
+npm run dev
+```
+
+
+## Estrutura básica do projeto
 ```
 app/
-├── dist/                # Pasta de saída dos arquivos gerados na build
-├── node_modules/        # Dependências instaladas via npm
-├── src/                 # Código-fonte da aplicação
-│   ├── App.tsx          # Componente principal da aplicação
-|   ├── api.ts           # Configuração para utilizar api do modelo de linguagem
-│   ├── index.css        # Arquivo de estilos global
-│   ├── main.tsx         # Ponto de entrada da aplicação React
-│   └── vite-env.d.ts    # Declarações de tipos específicas do Vite
-├── .env                 # Variáveis de ambiente
-├── .gitignore           # Arquivo para ignorar arquivos/pastas no Git
-├── eslint.config.js     # Configuração do ESLint
-├── index.html           # Arquivo HTML principal
-├── package-lock.json    # Arquivo de lock do npm
-├── package.json         # Gerenciador de scripts e dependências do projeto
-├── postcss.config       # Configuração do PostCSS (possivelmente sem extensão, mas indica a configuração)
-├── tailwind.config.js   # Configuração do Tailwind CSS
-├── tsconfig.app.json    # Configuração TypeScript específica para o app
-├── tsconfig.json        # Configuração geral do TypeScript
-├── tsconfig.node.json   # Configuração TypeScript para scripts/node
-└── vite.config.ts       # Configuração do Vite
+├── backend/       # Contém a API e a comunicação com o banco de dados
+├── interface/     # Contém o frontend desenvolvido
+├── package.json   # Arquivo na raiz que define scripts para rodar backend e frontend juntos
+
 ```
-### Fluxo do APP
+## Fluxo do APP
 ```mermaid
 flowchart TD
     %% Subgraph de entrada (horizontal)
     subgraph Entrada [Formulário e Entrada de Dados]
       direction LR
-      A[Usuário preenche formulário] --> B[App recebe inputs]
+      A[Usuário preenche formulário] --> B[App recebe inputs - **Parâmetros para Prompt**]
     end
 
     %% Subgraph de integração com Gemini (horizontal)
     subgraph Gemini [Integração com Gemini-2.5-Flash]
       direction LR
-      C[Envia inputs para API do Gemini] --> D[Gemini-2.5-Flash gera textos]
+      C[Envia inputs para API do Gemini - **Parâmetros para Prompt**] --> D[Gemini-2.5-Flash gera textos - **Resultados do Prompt**]
     end
 
     %% Subgraph de processamento (horizontal)
@@ -42,6 +49,7 @@ flowchart TD
       direction LR
       E[App recebe textos gerados] --> F[Segmenta o texto]
       F --> G[Salva conteúdos no MongoDB]
+      G --> H[Armazena em duas coleções:<br>Prompt Inicial e Resultado do Prompt]
     end
 
     %% Conexões entre subgraphs
@@ -56,43 +64,65 @@ flowchart TD
     style E fill:#d1ecf1,stroke:#0c5460,stroke-width:2px;
     style F fill:#f8d7da,stroke:#721c24,stroke-width:2px;
     style G fill:#f5c6cb,stroke:#721c24,stroke-width:2px;
+    style H fill:#e2e3e5,stroke:#6c757d,stroke-width:2px;
 
     %% Nota informativa sobre o Gemini-2.5-Flash
     D -->|Modelo de IA para geração de textos| NoteGemini
     NoteGemini["**Gemini-2.5-Flash** <br> Gera textos otimizados com prompt <br> para postagens e conteúdos de marketing."]
 
 ```
-### Dependências
-| Pacote         | Versão    | Descrição                                  |
-|---------------|----------|--------------------------------------------|
-| axios        | ^1.8.4   | Cliente HTTP para fazer requisições        |
-| dotenv       | ^16.4.7  | Carregar variáveis de ambiente do `.env`   |
-| lucide-react | ^0.344.0 | Ícones para React                          |
-| mongodb      | ^6.15.0  | Driver oficial do MongoDB para Node.js     |
-| react        | ^18.3.1  | Biblioteca para construção de interfaces   |
-| react-dom    | ^18.3.1  | Manipulação da árvore DOM com React       |
+## Dependências
+Dependências para o funcionamento correto do app (front-end e back-end):
 
-### **Modelo de Banco de Dados MongoDB**
+| Dependência | Versão | Projeto |
+|-------------|--------|---------|
+| concurrently | ^8.0.0 | Front-end |
+| lucide-react | ^0.344.0 | Front-end |
+| react       | ^18.3.1 | Front-end |
+| react-dom   | ^18.3.1 | Front-end |
+| axios       | ^1.8.4 | Back-end |
+| cors        | ^2.8.5 | Back-end |
+| dotenv      | ^16.4.5 | Back-end |
+| express     | ^4.19.2 | Back-end |
+| mongodb     | ^6.8.0 | Back-end |
+| mongoose    | ^8.6.1 | Back-end |
 
+Observação: A dependência `concurrently` é frequentemente usada para executar múltiplos comandos simultaneamente, geralmente no arquivo `package.json` do projeto front-end, mas pode ser usada em qualquer lugar onde seja necessário. A dependência `axios` aparece em ambos os projetos, mas isso não é incomum, pois pode ser usada tanto no front-end quanto no back-end para fazer requisições HTTP.
+
+
+## Modelo de Banco de Dados MongoDB
+```mermaid
+flowchart LR
+    PI["Parâmetros do prompts<br><small>Dados de entrada do usuário para criação do prompt.</small>"]
+    RP["Resultado do Prompt<br><small>Texto gerado e processado pelo modelo.</small>"]
+    PI -- "references" --> RP
+```
 A seguir está a modelagem para a **coleção `posts`**, que armazena os posts gerados.
 
-#### **📂 Coleção: `posts`**
+#### **📂 Coleção que representa os parâmetros de prompts gerados pelo usuário: `prompts_iniciais`**
 
 ```json
 {
-  "_id": ObjectId("65fabc1234567890abcdef12"),
-  "segmento": "Loja de Roupas Fitness",
-  "produto": "Conjunto de academia de secagem rápida",
-  "publico_alvo": "Mulheres que praticam exercícios físicos regularmente",
-  "problema": "Você já passou pela frustração de treinar com roupas desconfortáveis e que não absorvem o suor?",
-  "solucao": "Nosso conjunto fitness é feito com tecido de secagem ultra rápida e ajuste perfeito ao corpo, garantindo liberdade de movimento e máximo conforto!",
-  "cta": "🛍️ Garanta o seu agora! Acesse nossa loja online e treine com mais estilo e performance.",
-  "canal_publicacao": "Instagram",
-  "criado_em": ISODate("2025-03-20T10:30:00Z")
+  "segmento": "string",             // Segmento de mercado (ex: tecnologia, saúde)
+  "produto": "string",              // Nome do produto ou serviço
+  "publico_alvo": "string",         // Público ideal (ex: jovens empreendedores)
+  "problema": "string",             // Problema que o público enfrenta
+  "solucao": "string",              // Como o produto resolve o problema
+  "cta": "string",                  // Chamada para ação (ex: experimente grátis)
+  "canal_publicacao": "string",     // Onde será publicado (ex: Instagram, email)
+  "criado_em": "date"               // Data de criação do prompt
+}
+
+```
+#### **📂 Coleção que representa a resposta do modelo de linguagem gerados a partir do prompt: `resultados_prompts`**
+```json
+{
+  "prompt": "ObjectId",             // Referência ao prompt_inicial correspondente
+  "hook": "string",                 // Frase curta e chamativa com emojis
+  "problema": "string",             // Explicação clara do problema
+  "solucao": "string",              // Descrição de como o produto resolve
+  "cta": "string",                  // Chamada para ação
+  "gerado_em": "date"               // Data de geração do resultado
 }
 ```
-# Nova Estrutura
-
-## Backend Steps
-## Front
 
