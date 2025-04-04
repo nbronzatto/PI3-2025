@@ -1,6 +1,6 @@
 # Gerador de Conteúdos para Posts
 ## Iniciando o aplicativo em ambiente de desenvolvimento
-
+![Output](./out.PNG)
 ### 1. Instalar dependências do backend
 ```bash
 cd backend
