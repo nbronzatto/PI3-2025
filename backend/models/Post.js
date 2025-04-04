@@ -9,7 +9,7 @@ const PostsMarketingSchema = new mongoose.Schema({
     solucao: { type: String, required: true },
     cta: { type: String, required: true },
     canal_publicacao: { type: String, required: true },
-    criado_em: { type: Date, default: Date.now } // Define a data atual caso não seja fornecida
-});
+    criado_em: { type: Date, default: Date.now }
+}, { collection: 'posts_gerados' });
 
-module.exports = mongoose.model('Posts', PostsMarketingSchema);
+module.exports = mongoose.model('posts_gerados', PostsMarketingSchema);

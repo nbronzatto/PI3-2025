@@ -14,14 +14,13 @@ connectDB();
 // Inicializar o app Express
 const app = express();
 
-
 // Middleware para analisar JSON
 app.use(express.json());
 app.use(cors())
 
 
 // Incluir as rotas
-app.use('/post', require('./routes/postRoutes'));
+app.use('/newpost', require('./routes/postRoutes'));
 
 
 // Porta do servidor
