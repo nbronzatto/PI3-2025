@@ -21,7 +21,7 @@ app.use(cors())
 
 // Incluir as rotas
 app.use('/newpost', require('./routes/postRoutes'));
-
+app.use('/newprompt', require('./routes/geminiRoutes'));
 
 // Porta do servidor
 const PORT = process.env.PORT || 5000;
