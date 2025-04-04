@@ -25,6 +25,10 @@ export default defineConfig({
         target: 'http://localhost:5000',
         changeOrigin: true,
       },
+      '/newpost': {
+        target: 'http://localhost:5000',
+        changeOrigin: true,
+      }
     },
   },
 });

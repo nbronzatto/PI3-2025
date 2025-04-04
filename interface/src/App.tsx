@@ -42,6 +42,34 @@ function App() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const sendPostToDatabase = async (data: FormData & { cta: string }): Promise<void> => {
+    try {
+      const payload = {
+        segmento: data.segment,
+        produto: data.product,
+        publico_alvo: data.target,
+        problema: data.problem,
+        solucao: data.solution,
+        cta: data.cta,
+        canal_publicacao: data.channel,
+      };
+  
+      const response = await axios.post('/newpost', payload, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      console.log('POST /newpost', response.data); // Apenas para debug
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        throw new Error(error.response?.data?.message || 'Erro ao salvar o post');
+      }
+      throw new Error('Erro inesperado ao enviar para o banco de dados');
+    }
+  };
+  
+
   const fetchGeneratedPost = async (data: FormData): Promise<GeneratedPost> => {
     try {
       const response = await axios.post('/newprompt', data, {
@@ -64,18 +92,23 @@ function App() {
     e.preventDefault();
     setLoading(true);
     setError(null);
-    
+  
     try {
-      // Chama a API para gerar o post utilizando os dados do formulário
+      // Obter resposta do prompt
       const post = await fetchGeneratedPost(formData);
       setGeneratedPost(post);
+  
+      // Envia o post gerado para o banco
+      await sendPostToDatabase({ ...formData, cta: post.cta });
+  
     } catch (error) {
-      console.error("Erro na geração do post:", error);
+      console.error("Erro:", error);
       setError(error instanceof Error ? error.message : 'Ocorreu um erro inesperado');
     } finally {
       setLoading(false);
     }
   };
+  
 
   const handleCopy = async () => {
     if (!generatedPost) return;
