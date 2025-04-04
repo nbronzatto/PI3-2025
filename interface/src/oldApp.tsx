@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { Copy, Send, RefreshCw, MessageSquare } from 'lucide-react';
+
 
 export type SocialChannel = 'Instagram' | 'Facebook' | 'TikTok' | 'Site';
 
@@ -29,57 +29,33 @@ const initialFormData: FormData = {
   channel: 'Instagram',
 };
 
-
 function App() {
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [generatedPost, setGeneratedPost] = useState<GeneratedPost | null>(null);
   const [copied, setCopied] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const fetchGeneratedPost = async (data: FormData): Promise<GeneratedPost> => {
-    try {
-      const response = await axios.post('/newprompt', data, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-  
-      console.log('POST /newprompt'); // Apenas para debug
-      return response.data;
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        throw new Error(error.response?.data?.message || 'Erro ao gerar o post');
-      }
-      throw new Error('Erro inesperado');
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    setError(null);
-    
     try {
       // Chama a API para gerar o post utilizando os dados do formulário
       const post = await fetchGeneratedPost(formData);
       setGeneratedPost(post);
     } catch (error) {
       console.error("Erro na geração do post:", error);
-      setError(error instanceof Error ? error.message : 'Ocorreu um erro inesperado');
-    } finally {
-      setLoading(false);
+      // Aqui você pode implementar feedback visual para o usuário
     }
   };
 
   const handleCopy = async () => {
     if (!generatedPost) return;
+    
     const text = `${generatedPost.hook}\n\n${generatedPost.problem}\n\n${generatedPost.solution}\n\n${generatedPost.cta}`;
+    
     await navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -88,7 +64,6 @@ function App() {
   const handleReset = () => {
     setFormData(initialFormData);
     setGeneratedPost(null);
-    setError(null);
   };
 
   return (
