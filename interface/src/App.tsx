@@ -30,6 +30,10 @@ const initialFormData: FormData = {
 };
 
 
+const apiUrl_newpost = import.meta.env.VITE_API_URL_NEWPOST || '/newpost';
+const apiUrl_newprompt = import.meta.env.VITE_API_URL_NEWPROMPT || '/newprompt';
+
+
 function App() {
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [generatedPost, setGeneratedPost] = useState<GeneratedPost | null>(null);
@@ -54,13 +58,12 @@ function App() {
         canal_publicacao: data.channel,
       };
   
-      const response = await axios.post('/newpost', payload, {
+      const response = await axios.post(apiUrl_newpost, payload, {
         headers: {
           'Content-Type': 'application/json',
         },
       });
   
-      console.log('POST /newpost', response.data); // Apenas para debug
     } catch (error) {
       if (axios.isAxiosError(error)) {
         throw new Error(error.response?.data?.message || 'Erro ao salvar o post');
@@ -72,13 +75,11 @@ function App() {
 
   const fetchGeneratedPost = async (data: FormData): Promise<GeneratedPost> => {
     try {
-      const response = await axios.post('/newprompt', data, {
+      const response = await axios.post(apiUrl_newprompt, data, {
         headers: {
           'Content-Type': 'application/json',
         },
       });
-  
-      console.log('POST /newprompt'); // Apenas para debug
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
