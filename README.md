@@ -97,9 +97,13 @@ flowchart LR
     RP["Resultado do Prompt<br><small>Texto gerado e processado pelo modelo.</small>"]
     PI -- "references" --> RP
 ```
-A seguir está a modelagem para a **coleção `posts`**, que armazena os posts gerados.
 
-#### **📂 Coleção que representa os parâmetros de prompts gerados pelo usuário: `prompts_iniciais`**
+
+### 📂 Estrutura de Dados
+
+#### **Coleção: `prompts_iniciais`**
+
+Armazena os parâmetros fornecidos pelo usuário para gerar um prompt.
 
 ```json
 {
@@ -112,9 +116,12 @@ A seguir está a modelagem para a **coleção `posts`**, que armazena os posts g
   "canal_publicacao": "string",     // Onde será publicado (ex: Instagram, email)
   "criado_em": "date"               // Data de criação do prompt
 }
-
 ```
-#### **📂 Coleção que representa a resposta do modelo de linguagem gerados a partir do prompt: `resultados_prompts`**
+
+#### **Coleção: `resultados_prompts`**
+
+Armazena as respostas geradas pelo modelo de linguagem a partir de um prompt inicial.
+
 ```json
 {
   "prompt": "ObjectId",             // Referência ao prompt_inicial correspondente
@@ -125,4 +132,34 @@ A seguir está a modelagem para a **coleção `posts`**, que armazena os posts g
   "gerado_em": "date"               // Data de geração do resultado
 }
 ```
+
+---
+
+### Diagrama do Modelo de Dados (Mermaid)
+
+```mermaid
+erDiagram
+    PROMPTS_INICIAIS {
+        string segmento
+        string produto
+        string publico_alvo
+        string problema
+        string solucao
+        string cta
+        string canal_publicacao
+        date criado_em
+    }
+
+    RESULTADOS_PROMPTS {
+        ObjectId prompt  "FK -> PROMPTS_INICIAIS._id"
+        string hook
+        string problema
+        string solucao
+        string cta
+        date gerado_em
+    }
+
+    PROMPTS_INICIAIS ||--o{ RESULTADOS_PROMPTS : gera
+```
+
 
